@@ -24,51 +24,52 @@
 
 package hudson.plugins.build_timeout.impl;
 
-import hudson.model.*;
+import java.util.Arrays;
+
+import hudson.model.ParametersDefinitionProperty;
+import hudson.model.Result;
+import hudson.model.Cause;
+import hudson.model.FreeStyleProject;
+import hudson.model.ParametersAction;
+import hudson.model.StringParameterDefinition;
+import hudson.model.StringParameterValue;
 import hudson.plugins.build_timeout.BuildTimeOutOperation;
 import hudson.plugins.build_timeout.BuildTimeoutWrapper;
 import hudson.plugins.build_timeout.BuildTimeoutWrapperIntegrationTest;
 import hudson.plugins.build_timeout.operations.AbortOperation;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.SleepBuilder;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Arrays;
 
 /**
  * Tests for {@link AbsoluteTimeOutStrategy}.
  * Many tests for {@link AbsoluteTimeOutStrategy} are also in {@link BuildTimeoutWrapperIntegrationTest}
  */
-@ExtendWith(MockitoExtension.class)
-@Tag("annotations")
-@Tag("junit5")
 public class AbsoluteTimeOutStrategyTest {
 
-    @Mock
+    @Rule
     public JenkinsRule j = new JenkinsRule();
 
     private long origTimeout = 0;
     
-    @BeforeEach
+    @Before
     public void before() {
         // this allows timeout shorter than 3 minutes.
         origTimeout = BuildTimeoutWrapper.MINIMUM_TIMEOUT_MILLISECONDS;
         BuildTimeoutWrapper.MINIMUM_TIMEOUT_MILLISECONDS = 1000;
     }
     
-    @AfterEach
+    @After
     public void after() {
         BuildTimeoutWrapper.MINIMUM_TIMEOUT_MILLISECONDS = origTimeout;
     }
     
     @Test
-    public void configurationWithParameterTest() throws Exception {
+    public void configurationWithParameter() throws Exception {
         FreeStyleProject p = j.createFreeStyleProject();
         // needed since Jenkins 2.3
         p.addProperty(new ParametersDefinitionProperty(new StringParameterDefinition("TIMEOUT", null)));
