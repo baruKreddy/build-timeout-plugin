@@ -30,7 +30,7 @@ public class ElasticTimeOutStrategyTest {
 
         Build b = new Build(new Build(60 * MINUTES, SUCCESS));
 
-        assertEquals( 120 * MINUTES, strategy.getTimeOut(b,null),"Timeout should be 200% of 60");
+        assertEquals(120 * MINUTES, strategy.getTimeOut(b,null),"Timeout should be 200% of 60");
     }
 
     @Test
@@ -39,7 +39,7 @@ public class ElasticTimeOutStrategyTest {
 
         Build b = new Build(new Build(20 * MINUTES, SUCCESS, new Build(40 * MINUTES, SUCCESS)));
 
-        assertEquals( 60 * MINUTES, strategy.getTimeOut(b,null),"Timeout should be 200% of the average of 20 and 40");
+        assertEquals(60 * MINUTES, strategy.getTimeOut(b,null),"Timeout should be 200% of the average of 20 and 40");
     }
 
     @Test
@@ -47,7 +47,7 @@ public class ElasticTimeOutStrategyTest {
         BuildTimeOutStrategy strategy = new ElasticTimeOutStrategy(200, 90, 3);
 
         Build b = new Build(null);
-        assertEquals( 90 * MINUTES, strategy.getTimeOut(b,null),"Timeout should be the elastic default.");
+        assertEquals(90 * MINUTES, strategy.getTimeOut(b,null),"Timeout should be the elastic default.");
     }
 
     @Test
@@ -56,7 +56,7 @@ public class ElasticTimeOutStrategyTest {
 
         Build b = new Build(new Build(20 * MINUTES, SUCCESS));
 
-        assertEquals( 60 * MINUTES, strategy.getTimeOut(b,null),"Timeout should be the elastic default.");
+        assertEquals(60 * MINUTES, strategy.getTimeOut(b,null),"Timeout should be the elastic default.");
     }
 
     @Test
