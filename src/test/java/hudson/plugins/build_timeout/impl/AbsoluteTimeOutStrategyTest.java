@@ -24,53 +24,42 @@
 
 package hudson.plugins.build_timeout.impl;
 
-import java.util.Arrays;
-
-import hudson.model.ParametersDefinitionProperty;
-import hudson.model.Result;
-import hudson.model.Cause;
-import hudson.model.FreeStyleProject;
-import hudson.model.ParametersAction;
-import hudson.model.StringParameterDefinition;
-import hudson.model.StringParameterValue;
+import hudson.model.*;
 import hudson.plugins.build_timeout.BuildTimeOutOperation;
 import hudson.plugins.build_timeout.BuildTimeoutWrapper;
 import hudson.plugins.build_timeout.BuildTimeoutWrapperIntegrationTest;
 import hudson.plugins.build_timeout.operations.AbortOperation;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import io.jenkins.plugins.util.IntegrationTestWithJenkinsPerSuite;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.SleepBuilder;
+
+import java.util.Arrays;
 
 /**
  * Tests for {@link AbsoluteTimeOutStrategy}.
  * Many tests for {@link AbsoluteTimeOutStrategy} are also in {@link BuildTimeoutWrapperIntegrationTest}
  */
-public class AbsoluteTimeOutStrategyTest {
-
-    @Rule
-    public JenkinsRule j = new JenkinsRule();
-
+public class AbsoluteTimeOutStrategyTest extends IntegrationTestWithJenkinsPerSuite {
     private long origTimeout = 0;
-    
-    @Before
+    @BeforeEach
     public void before() {
         // this allows timeout shorter than 3 minutes.
         origTimeout = BuildTimeoutWrapper.MINIMUM_TIMEOUT_MILLISECONDS;
         BuildTimeoutWrapper.MINIMUM_TIMEOUT_MILLISECONDS = 1000;
     }
     
-    @After
+    @AfterEach
     public void after() {
         BuildTimeoutWrapper.MINIMUM_TIMEOUT_MILLISECONDS = origTimeout;
     }
     
     @Test
-    public void configurationWithParameter() throws Exception {
-        FreeStyleProject p = j.createFreeStyleProject();
+    public void configurationWithParameterTest() throws Exception {
+        FreeStyleProject p = createFreeStyleProject();
+        JenkinsRule j= getJenkins();
         // needed since Jenkins 2.3
         p.addProperty(new ParametersDefinitionProperty(new StringParameterDefinition("TIMEOUT", null)));
         p.getBuildWrappersList().add(
@@ -96,4 +85,5 @@ public class AbsoluteTimeOutStrategyTest {
                 new ParametersAction(new StringParameterValue("TIMEOUT", "0"))
         ).get());
     }
+
 }
